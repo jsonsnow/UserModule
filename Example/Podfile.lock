@@ -1,0 +1,72 @@
+PODS:
+  - Alamofire (4.9.1)
+  - Masonry (1.0.2)
+  - Mediator (0.1.5):
+    - Mediator/ModuleHelper (= 0.1.5)
+    - Mediator/ModuleService (= 0.1.5)
+    - WGRouter
+  - Mediator/ModuleHelper (0.1.5):
+    - WGRouter
+  - Mediator/ModuleService (0.1.5):
+    - WGRouter
+  - Moya (13.0.1):
+    - Moya/Core (= 13.0.1)
+  - Moya/Core (13.0.1):
+    - Alamofire (~> 4.1)
+    - Result (~> 4.1)
+  - Result (4.1.0)
+  - Sensors (0.1.0):
+    - SensorsAnalyticsSDK (~> 2.1.6)
+    - WGCommon
+    - WGNet
+  - SensorsAnalyticsSDK (2.1.17):
+    - SensorsAnalyticsSDK/Core (= 2.1.17)
+  - SensorsAnalyticsSDK/Core (2.1.17)
+  - UserModule (0.1.0):
+    - Mediator
+    - Sensors
+  - WGCommon (0.1.2):
+    - Masonry (~> 1.0.1)
+  - WGNet (0.1.3):
+    - Moya
+  - WGRouter (0.1.0)
+
+DEPENDENCIES:
+  - Mediator
+  - Sensors
+  - UserModule (from `../`)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Alamofire
+    - Masonry
+    - Moya
+    - Result
+    - SensorsAnalyticsSDK
+  https://github.com/jsonsnow/CLSpces.git:
+    - Mediator
+    - Sensors
+    - WGCommon
+    - WGNet
+    - WGRouter
+
+EXTERNAL SOURCES:
+  UserModule:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
+  Mediator: 4413eeaea8e002f9e751b3ba0a86c59350fffc5a
+  Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
+  Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
+  Sensors: cdbe663c1509bf35fa4196023faa8dae8153ae0b
+  SensorsAnalyticsSDK: 67b886cc8527627d7c950146cd652abb0098afd0
+  UserModule: c050de51bcc632b82f3796173afae12191841369
+  WGCommon: e0679b1ab73800721814c5e6e8115534d30d9e08
+  WGNet: 0fa4a7a9c7d0d6c6ab552130d38c60519bc43987
+  WGRouter: 12df174f180cff141c947c00cfd563c069fec2a0
+
+PODFILE CHECKSUM: 8f7c1907432d035f82c5b5caba7ac7e959f486da
+
+COCOAPODS: 1.9.1

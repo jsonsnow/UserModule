@@ -44,9 +44,9 @@
 		968CDE3311A165CD7EA20905 /* Pods-UserModule_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserModule_Example.debug.xcconfig"; path = "Target Support Files/Pods-UserModule_Example/Pods-UserModule_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		B1F4CFBC5003900CD877A997 /* Pods-UserModule_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserModule_Tests.debug.xcconfig"; path = "Target Support Files/Pods-UserModule_Tests/Pods-UserModule_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		E7C90E1DA0DF5C89456E92AB /* Pods-UserModule_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserModule_Example.release.xcconfig"; path = "Target Support Files/Pods-UserModule_Example/Pods-UserModule_Example.release.xcconfig"; sourceTree = "<group>"; };
-		E951D423208AFB84D90E2C9B /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		EC7E138D3D7B8DF6917EE967 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		EC8B58C0E5AA1B07237AC5AA /* UserModule.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = UserModule.podspec; path = ../UserModule.podspec; sourceTree = "<group>"; };
+		E951D423208AFB84D90E2C9B /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		EC7E138D3D7B8DF6917EE967 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		EC8B58C0E5AA1B07237AC5AA /* UserModule.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = UserModule.podspec; path = ../UserModule.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,7 +156,6 @@
 				B1F4CFBC5003900CD877A997 /* Pods-UserModule_Tests.debug.xcconfig */,
 				136019E774BB3C51774F1B31 /* Pods-UserModule_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -227,6 +226,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -291,11 +291,31 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-UserModule_Example/Pods-UserModule_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
+				"${BUILT_PRODUCTS_DIR}/Mediator/Mediator.framework",
+				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
+				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/Sensors/Sensors.framework",
+				"${BUILT_PRODUCTS_DIR}/SensorsAnalyticsSDK/SensorsAnalyticsSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/UserModule/UserModule.framework",
+				"${BUILT_PRODUCTS_DIR}/WGCommon/WGCommon.framework",
+				"${BUILT_PRODUCTS_DIR}/WGNet/WGNet.framework",
+				"${BUILT_PRODUCTS_DIR}/WGRouter/WGRouter.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mediator.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sensors.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SensorsAnalyticsSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UserModule.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WGCommon.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WGNet.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WGRouter.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

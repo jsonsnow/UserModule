@@ -1,8 +1,13 @@
 use_frameworks!
 
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/jsonsnow/CLSpces.git'
+
 platform :ios, '9.0'
 
 target 'UserModule_Example' do
+  pod 'Mediator'
+  pod 'Sensors'
   pod 'UserModule', :path => '../'
 
   target 'UserModule_Tests' do

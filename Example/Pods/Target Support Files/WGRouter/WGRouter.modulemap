@@ -1,0 +1,6 @@
+framework module WGRouter {
+  umbrella header "WGRouter-umbrella.h"
+
+  export *
+  module * { export * }
+}
