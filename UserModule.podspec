@@ -40,4 +40,6 @@ TODO: Add long description of the pod here.
   # s.frameworks = 'UIKit', 'MapKit'
    s.dependency 'Mediator'
    s.dependency 'Sensors'
+   s.dependency 'SVProgressHUD', '~> 2.2.5'
+   s.dependency 'WGNet'
 end

@@ -1,0 +1,37 @@
+{
+  "name": "WGCommon",
+  "version": "0.1.2",
+  "summary": "A short description of WGCommon.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/jsonsnow/WGCommon",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "jsonsnow": "1183010734@qq.com"
+  },
+  "source": {
+    "git": "https://github.com/jsonsnow/WGCommon.git",
+    "tag": "0.1.2"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "WGCommon/Classes/**/*",
+  "resource_bundles": {
+    "WGCommon": [
+      "WGCommon/Assets/*.bundle",
+      "WGCommon/Assets/*.xcassets"
+    ]
+  },
+  "pod_target_xcconfig": {
+    "DEFINES_MODULE": "YES"
+  },
+  "public_header_files": "Pod/Classes/WGCommon.h",
+  "dependencies": {
+    "Masonry": [
+      "~> 1.0.1"
+    ]
+  }
+}

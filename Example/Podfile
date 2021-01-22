@@ -6,9 +6,12 @@ source 'https://github.com/jsonsnow/CLSpces.git'
 platform :ios, '9.0'
 
 target 'UserModule_Example' do
-  pod 'Mediator'
+  pod 'Mediator', :path => '../../Mediator'
   pod 'Sensors'
   pod 'UserModule', :path => '../'
+  pod 'SVProgressHUD','~> 2.2.5'
+  pod 'WGCommon', :path => '../../WGCommon'
+  pod 'WGNet', :path => '../../WGNet'
 
   target 'UserModule_Tests' do
     inherit! :search_paths

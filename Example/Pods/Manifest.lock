@@ -22,19 +22,25 @@ PODS:
   - SensorsAnalyticsSDK (2.1.17):
     - SensorsAnalyticsSDK/Core (= 2.1.17)
   - SensorsAnalyticsSDK/Core (2.1.17)
+  - SVProgressHUD (2.2.5)
   - UserModule (0.1.0):
     - Mediator
     - Sensors
+    - SVProgressHUD (~> 2.2.5)
+    - WGNet
   - WGCommon (0.1.2):
     - Masonry (~> 1.0.1)
   - WGNet (0.1.3):
-    - Moya
+    - Moya (~> 13.0.1)
   - WGRouter (0.1.0)
 
 DEPENDENCIES:
-  - Mediator
+  - Mediator (from `../../Mediator`)
   - Sensors
+  - SVProgressHUD (~> 2.2.5)
   - UserModule (from `../`)
+  - WGCommon (from `../../WGCommon`)
+  - WGNet (from `../../WGNet`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -43,30 +49,35 @@ SPEC REPOS:
     - Moya
     - Result
     - SensorsAnalyticsSDK
+    - SVProgressHUD
   https://github.com/jsonsnow/CLSpces.git:
-    - Mediator
     - Sensors
-    - WGCommon
-    - WGNet
     - WGRouter
 
 EXTERNAL SOURCES:
+  Mediator:
+    :path: "../../Mediator"
   UserModule:
     :path: "../"
+  WGCommon:
+    :path: "../../WGCommon"
+  WGNet:
+    :path: "../../WGNet"
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
-  Mediator: 4413eeaea8e002f9e751b3ba0a86c59350fffc5a
+  Mediator: d3190dbcd09e32871c28d5c1e6c342ea07b1ac2e
   Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
   Sensors: cdbe663c1509bf35fa4196023faa8dae8153ae0b
   SensorsAnalyticsSDK: 67b886cc8527627d7c950146cd652abb0098afd0
-  UserModule: c050de51bcc632b82f3796173afae12191841369
-  WGCommon: e0679b1ab73800721814c5e6e8115534d30d9e08
-  WGNet: 0fa4a7a9c7d0d6c6ab552130d38c60519bc43987
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  UserModule: 62625375a365935e3da00b699efea68dd7d7b7c5
+  WGCommon: 16d3ca44dc2b4129102aa8e75d802dd7ac431240
+  WGNet: 4bda697eb51cdbc866e126710a32436b6adf10b1
   WGRouter: 12df174f180cff141c947c00cfd563c069fec2a0
 
-PODFILE CHECKSUM: 8f7c1907432d035f82c5b5caba7ac7e959f486da
+PODFILE CHECKSUM: 51a7bd3b4358c3526458b8532e50b08f144b0c79
 
 COCOAPODS: 1.9.1

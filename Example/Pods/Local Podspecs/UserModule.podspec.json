@@ -25,6 +25,12 @@
     ],
     "Sensors": [
 
+    ],
+    "SVProgressHUD": [
+      "~> 2.2.5"
+    ],
+    "WGNet": [
+
     ]
   }
 }
