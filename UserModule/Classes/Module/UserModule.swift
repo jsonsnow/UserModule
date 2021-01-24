@@ -13,11 +13,12 @@ import WGRouter
 class UserModule: NSObject, WGUserModuleService, BifrostModuleProtocol {
     
     func saveLoginUserInfo(_ info: [AnyHashable : Any] = [:]) {
-        
+        PreferenceTool.setValueInDefaultGroup(info, key: "log_in_info")
     }
     
     func saveUserToken(_ token: String) {
-        
+        PreferenceTool.set(value: token, with: "login_token")
+        PreferenceTool.setValueInDefaultGroup(token, key: "share_token")
     }
     
     func userToken() -> String? {
@@ -40,6 +41,7 @@ class UserModule: NSObject, WGUserModuleService, BifrostModuleProtocol {
     
     private override init() {
         super.init()
+        Bifrost.registerService(WGUserModuleService.self, withModule: UserModule.self)
     }
     
     func setup() {

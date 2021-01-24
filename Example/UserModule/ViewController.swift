@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import Mediator
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+//        Bifrost.registerService(<#T##serviceProtocol: Protocol##Protocol#>, withModule: <#T##BifrostModuleProtocol.Type#>)
         // Do any additional setup after loading the view, typically from a nib.
     }
 
