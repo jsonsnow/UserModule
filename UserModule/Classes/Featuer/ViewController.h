@@ -11,6 +11,5 @@
 @interface ViewController : UIViewController
 
 @end
-//extern NSString *const WALOGININWEIXINSUCESS;
-//extern NSString * const WALOGININWEIXINFAIL;
+
 

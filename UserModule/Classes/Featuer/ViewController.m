@@ -7,19 +7,6 @@
 //
 
 #import "ViewController.h"
-//#import "WebViewController.h"
-//#import "CommonUtils.h"
-//#import "FJTabBarViewController.h"
-//#import "FJNavgationViewController.h"
-//#import "WGImageAttributeManager.h"
-//#import "MQWebViewController.h"
-//#import "WXApi.h"
-//#import "WXRespManager.h"
-//#import "WGConnectData.h"
-//#import "WebViewController+Script.h"
-//#import "RouterFile.h"
-//#import "UIColor+Hex.h"
-//#import "UMSocialManager+WGDouYinShare.h"
 #import <Sensors/Sensors-Swift.h>
 #import <Mediator/WGUserModuleService.h>
 #import <Mediator/WGAppModuleService.h>
@@ -37,7 +24,6 @@
 @property (nonatomic, strong) UILabel *protocolLabel;
 
 @property (nonatomic, strong) UIButton *protocolBtn;
-
 @property (nonatomic, assign) BOOL isSupportMobileLogin;
 @property (nonatomic, copy) BifrostRouteCompletion routeCallback;
 @property (nonatomic, weak) id <AppCommonModuleService> appService;
@@ -50,10 +36,12 @@
 + (void)load {
     [Bifrost bindURL:kRouterUserLogin toHandler:^id _Nullable(NSDictionary * _Nullable parameters) {
         ViewController *login = [[ViewController alloc] init];
-        login.routeCallback = parameters[kRouterUserLogin];
+        login.routeCallback = parameters[kBifrostRouteCompletion];
         return login;
     }];
 }
+
+#pragma mark -- life cycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -61,6 +49,11 @@
     [self setupUI];
     [self configBtnInfo];
     [self checkSupportMobileLogin];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)setupUI {
@@ -73,15 +66,49 @@
     [self.view addSubview:self.protocolBtn];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    self.imageView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+    if (UIDevice.currentDevice.isPad) {
+        [self.imageView setImage:[UserBundleLoad imageNamed:@"index"]];
+    }else{
+        if (UIDevice.currentDevice.iSiPhoneNotchScreen) {
+            [self.imageView setImage:[UserBundleLoad imageNamed:@"iPhone_log_bg"]];
+        } else {
+            [self.imageView setImage:[UserBundleLoad imageNamed:@"group-2"]];
+        }
+    }
+    if (UIDevice.currentDevice.iSiPhoneNotchScreen) {
+        self.mobileButton.frame = CGRectMake(20, UIScreen.height-62-34, UIScreen.width-40, 20);
+        self.loginButton.frame = CGRectMake(20, UIScreen.height-120-34, UIScreen.width-40, 44);
+        self.protocolLabel.frame = CGRectMake(UIScreen.width/2-100, UIScreen.height-42-34, 100, 44);
+        self.protocolBtn.frame = CGRectMake(UIScreen.width/2, UIScreen.height-42-34, 120, 44);
+    } else {
+        self.mobileButton.frame = CGRectMake(20, UIScreen.height-62, UIScreen.width-40, 20);
+        self.loginButton.frame = CGRectMake(20, UIScreen.height-120, UIScreen.width-40, 44);
+        self.protocolLabel.frame = CGRectMake(UIScreen.width/2-100, UIScreen.height-42, 100, 44);
+        self.protocolBtn.frame = CGRectMake(UIScreen.width/2, UIScreen.height-42, 120, 44);
+    }
+}
+
+- (void)dealloc {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+#pragma mark -- private method
+
 - (void)configServices {
     self.appService = (id<AppCommonModuleService>) [Bifrost moduleByService:@protocol(AppCommonModuleService)];
     self.userService = (id<WGUserModuleService>) [Bifrost moduleByService:@protocol(WGUserModuleService)];
-    
 }
 
 - (void)checkSupportMobileLogin {
-    if ([self.appService um_wechat_Social_isInstall]) {
-        [[NetLayer net] albumRequstWithPath:@"" params:nil callback:^(WGConnectData * _Nonnull data) {
+    if (![self.appService um_wechat_Social_isInstall]) {
+        [[NetLayer net] albumRequstWithPath:@"service/account/guest_login.js" params:@{@"is_guest": @"1"} callback:^(WGConnectData * _Nonnull data) {
             int code = [data.errcode intValue];
             if (code == 502) {
                 self.isSupportMobileLogin = YES;
@@ -100,38 +127,17 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    NSLog(@"viewcontroller  viewWillAppear");
-    self.navigationController.navigationBarHidden = YES;
-}
-
-- (void)segueToWebViewController:(NSString *)url andIsIndex:(BOOL)isIndex
-{
-//    NSLog(@"segueToWebViewController:url==%@",url);
-//    if ([WGImageAttributeManager getImageAttributeManager].isNative) {
-//        WebViewController *webVC=[[WebViewController alloc] init];
-//        FJNavgationViewController *nvc = [[FJNavgationViewController alloc]initWithRootViewController:webVC];
-//        [webVC setUrlString:url andTitle:nil andIsIndex:isIndex];
-//        [UIApplication sharedApplication].keyWindow.rootViewController = nvc;
-//        [[UIApplication sharedApplication].keyWindow makeKeyAndVisible];
-//    }else{
-//        FJTabBarViewController *TBVC=[[FJTabBarViewController alloc] init];
-//        [UIApplication sharedApplication].keyWindow.rootViewController = TBVC;
-//        [[UIApplication sharedApplication].keyWindow makeKeyAndVisible];
-//    }
+- (void)segueToWebViewController:(NSString *)url andIsIndex:(BOOL)isIndex {
     if (self.routeCallback) {
         self.routeCallback(nil);
     }
-
 }
 
 - (void)wechatAuth {
     __weak ViewController *weakSelf = self;
     [self.appService authWechatCurrentViewController:self completion:^(id  _Nonnull result, NSError * _Nonnull error) {
         if (error) {
-            [self.appService logModule:@"[WEIXIN]=>[BACK]" verbose:[NSString stringWithFormat:@"ERROR:%@", error]];
+            [weakSelf.appService logModule:@"[WEIXIN]=>[BACK]" verbose:[NSString stringWithFormat:@"ERROR:%@", error]];
             [SVProgressHUD dismiss];
             [weakSelf getUserDataFailed];
             return;
@@ -139,99 +145,65 @@
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:result];
         userInfo[@"anonymousId"] = [DataAnlyticsManager anlytic].anonymousId;
         userInfo[@"act"] = @"decodeUserInfo";
-        [[NetLayer net] albumRequstWithPath:@"service/account/app_auth.jsp" params:userInfo callback:^(WGConnectData * _Nonnull data) {
-            [SVProgressHUD dismiss];
-            if (data.isSuccess) {
-                [weakSelf updateToken:data.token uid:data.uid dev:data.result[@"dev"]];
-                [weakSelf requestUid];
-                if ([data.redirect_url containsString:@"#/reg"]) {
-                    [weakSelf logRedirectTo:data.redirect_url];
-                } else {
-                    [weakSelf loginWithInfo:data.result token:data.token];
-                }
-                [weakSelf updateAppbageNumber];
-            } else {
-                [weakSelf showLoginFailWithNetWork];
-            }
-        }];
+        [weakSelf loginByInfo:userInfo];
     }];
 }
 
 - (void)guestLogin {
-    
+    __weak ViewController *weakSelf = self;
+    //不是游客登录接口，而是后续行为的依据
+    [[NetLayer net] albumRequstWithPath:@"service/account/guest_login.js" params:@{@"is_guest": @"1"} callback:^(WGConnectData * _Nonnull data) {
+        if (data.isSuccess) {
+            int code = [data.errcode intValue];
+            if (code == 0) {
+                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+                [userInfo setValue:@"oTmHYjr8fk0Z6J8Necoqx99oTYnM" forKey:@"uid"];
+                [userInfo setValue:@"otHyZwwjTYdDK91wX2eu6x2V0RrA" forKey:@"open_id"];
+                userInfo[@"anonymousId"] = [DataAnlyticsManager anlytic].anonymousId;
+                userInfo[@"act"] = @"decodeUserInfo";
+                [self loginByInfo:userInfo];
+            } else if (code == 502) {
+                [SVProgressHUD dismiss];
+                NSString *download = @"http://itunes.apple.com/cn/app/id414478124?mt=8";
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:download]];
+            } else {
+                [SVProgressHUD dismiss];
+                [self loginFailAlertMessage:@"服务器返回数据失败，请重试..." errorCode:code];
+            }
+        } else {
+            [SVProgressHUD dismiss];
+            [weakSelf showLoginFailWithNetWork];
+        }
+    }];
 }
+
+- (void)loginByInfo:(NSDictionary *)info {
+    __weak ViewController *weakSelf = self;
+    [[NetLayer net] albumRequstWithPath:@"service/account/app_auth.jsp" params:info callback:^(WGConnectData * _Nonnull data) {
+        [SVProgressHUD dismiss];
+        if (data.isSuccess) {
+            [weakSelf updateToken:data.token uid:data.uid dev:data.result[@"dev"]];
+            if ([data.redirect_url containsString:@"#/reg"]) {
+                [weakSelf logRedirectTo:data.redirect_url];
+            } else {
+                [weakSelf loginWithInfo:data.result token:data.token];
+            }
+            [weakSelf updateAppbageNumber];
+        } else {
+            [weakSelf showLoginFailWithNetWork];
+        }
+    }];
+}
+
 - (void)userLogin {
     BOOL isInstall = [self.appService um_wechat_Social_isInstall];
     [SVProgressHUD showWithStatus:@"授权跳转中..."];
     if (isInstall) {
         [self wechatAuth];
     } else {
-        
+        [self guestLogin];
     }
-//    [CommonUtils setSVProgressHUD:@"授权跳转中..."];
-//    weakSelf(self);
-//    if (isInstall) {
-//        [[UMSocialManager defaultManager] authWechatCurrentViewController:self completion:^(id result, NSError *error) {
-//            if (error) {
-//                LLog(@"从微信返回..........",[NSString stringWithFormat:@"error:%@",error]);
-//                [SVProgressHUD dismiss];
-//                [weakself getUserDataFailed];
-//                return;
-//            }
-//            NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:result];
-//            userInfo[@"anonymousId"] = [DataAnlyticsManager anlytic].anonymousId;
-//            userInfo[@"act"] = @"decodeUserInfo";
-//            [[WGConnectHelper shareInstance] postUrl:@"service/account/app_auth.jsp" params:userInfo entiyClass:nil parserJsonBlock:nil complateBlock:^(NSURLSessionDataTask * _Nullable task, WGConnectData * _Nonnull connectData) {
-//                if (connectData.isSuccess) {
-//                    [SVProgressHUD dismiss];
-//                    [weakself updateToken:connectData.token uid:connectData.uid dev:connectData.responseData[@"dev"]];
-//                    [weakself requestUid];
-//                    if ([connectData.redirect_url containsString:@"#/reg"]) {
-//                        [weakself logRedirectTo:connectData.redirect_url];
-//                    } else {
-//                        [weakself loginWithInfo:connectData.responseData token:connectData.token];
-//                    }
-//                    [weakself updateAppbageNumber];
-//                } else {
-//                    [SVProgressHUD dismiss];
-//                    [weakself showLoginFailWithNetWork];
-//                }
-//            }];
-//        }];
-//
-//    } else {
-//        [[HttpClient shareInstance] LoginGuest:^(id responseObject, NSError *error) {
-//            if (!error) {
-//                int responseErrcode = [[responseObject objectForKey:@"errcode"] intValue];
-//
-//                if (responseErrcode == 0 && responseObject) {
-//                    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-//                    [userInfo setValue:@"oTmHYjr8fk0Z6J8Necoqx99oTYnM" forKey:@"uid"];
-//                    [userInfo setValue:@"otHyZwwjTYdDK91wX2eu6x2V0RrA" forKey:@"open_id"];
-//                    userInfo[@"anonymousId"] = [DataAnlyticsManager anlytic].anonymousId;
-//                    [self loginIndex:userInfo];
-//                }else if (responseErrcode ==502){
-//                    [SVProgressHUD dismiss];
-//                    //直接跳转到微信安装
-//                    NSString *download = @"http://itunes.apple.com/cn/app/id414478124?mt=8";
-//                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:download]];
-//                }else{
-//                    [SVProgressHUD dismiss];
-//                    [self loginFailAlertMessage:@"服务器返回数据失败，请重试..." errorCode:responseErrcode];
-//                }
-//            }else{
-//                [SVProgressHUD dismiss];
-//                [self loginFailAlertMessage:@"请求失败，请重试..." errorCode:error.code];
-//            }
-//
-//
-//        }];
-//    }
-
-
 }
-
-
 
 - (void)trachLoginEvent:(NSDictionary *)info {
     LoginEvent *event = [[LoginEvent alloc] initWithMethod:@"微信" shop_name:info[@"shop_name"] loginId:info[@"shop_id"]];
@@ -240,29 +212,27 @@
 }
 
 - (void)configSensorEvent:(NSDictionary *)result {
-//    [self trachLoginEvent:result];
-//    [[HttpClient shareInstance] trackSignUp:@{
-//        @"shop_id":result[@"shop_id"],
-//        @"anonymous_id":[DataAnlyticsManager anlytic].anonymousId
-//    }resultBlock:^(WGConnectData *connectData) {
-//        if (connectData.isSuccess) {
-//            [DataAnlyticsManager anlytic].config.sensors_is_vip = connectData.responseData[@"is_vip"];
-//        }
-//    }];
+    [self trachLoginEvent:result];
+    [[NetLayer net] albumRequstWithPath:@"service/account/app_auth.jsp?act=track_signUp"
+                                 params:@{
+                                     @"shop_id": result[@"shop_id"],
+                                     @"anonymous_id": [DataAnlyticsManager anlytic].anonymousId }
+                               callback:^(WGConnectData * _Nonnull data) {
+        if (data.isSuccess) {
+            [DataAnlyticsManager anlytic].config.sensors_is_vip = data.result[@"is_vip"];
+        }
+    }];
 }
 
 
 - (void)logRedirectTo:(NSString *)redirect_url {
-    [Bifrost handleURL:kRouteWebPath complexParams:@{kkRouteWebIsRegParams: @(YES)} completion:nil];
+    UIViewController *ctr = [Bifrost handleURL:kRouteWebPath complexParams:@{kkRouteWebIsRegParams: @(YES), kRouteWebUrlParams: redirect_url} completion:nil];
+    [self.navigationController pushViewController:ctr animated:YES];
 }
 
 - (void)loginWithInfo:(NSDictionary *)result token:(NSString *)token {
-//    [self configSensorEvent:result];
-//    NSString *lastUrl = [NSString stringWithFormat:@"%@static/index.html#/album_home", [CommonUtils getBaseURL]];
-//    NSString *subURL = [CommonUtils saveLoginStatusURL:lastUrl];
-//    [[UserData shareInstance] setParam:SUB_URL_KEY ValueOfParam:subURL];
-//    [[UserData shareInstance] setParam:LAST_URL_KEY ValueOfParam:lastUrl];
-//    [self segueToWebViewController:lastUrl andIsIndex:[CommonUtils isIndex:lastUrl]];
+    [self configSensorEvent:result];
+    [self segueToWebViewController:nil andIsIndex:NO];
 }
 
 - (void)updateAppbageNumber {
@@ -271,67 +241,15 @@
 }
 
 - (void)updateToken:(NSString *)token uid:(NSString *)uid dev:(NSString *)dev {
-//    [self configUmAlais:uid];
-//    [[UserData shareInstance] updateToken:token];
-//    [[UserData shareInstance] setValueInGroupValue:dev key:JS_DEVELOP];
+    [self.userService saveUserToken:token];
+    [self.userService setJSDevelop:dev];
+    [self.appService configUMAlias:uid];
 }
 
-- (void)configUmAlais:(NSString *)unid {
-//    if (unid.length > 0) {
-//        [[UserData shareInstance] setParam:@"uidkey" ValueOfParam:unid];
-//        [UMessage addAlias:unid type:kUMessageAliasTypeWeiXin response:^(id responseObject, NSError *UMError) {
-//            if (UMError) {
-//                LLog(@"PUSH->SET:==>",[NSString stringWithFormat:@"info:%@", UMError.userInfo]);
-//            }
-//        }];
-//    }
-}
-//登录成功
-- (void)loginIndex:(NSDictionary *)userInfo {
-//    [[HttpClient shareInstance] LoginBase:userInfo resultBlock:^(id responseObject, NSError *error) {
-//        if (!error) {
-//            int responseErrcode = [[responseObject objectForKey:@"errcode"] intValue];
-//            NSString *responseErrormsg = [responseObject objectForKey:@"errmsg"];
-//            if (responseErrcode == 0 && responseObject) {
-//                NSDictionary * result = responseObject[@"result"];
-//                NSString *redirect_url = [responseObject objectForKey:@"redirect_url"];
-//                NSString *token = [responseObject objectForKey:@"token"];
-//                NSString *uid = [responseObject objectForKey:@"uid"];
-//                //绑定用户信息到deviceToken
-//                [self updateToken:token uid:uid dev:result[@"dev"]];
-//                [self requestUid];
-//                if ([redirect_url containsString:@"#/reg"]) {
-//                    [SVProgressHUD dismiss];
-//                    [self logRedirectTo:redirect_url];
-//                } else {
-//                    [self loginWithInfo:result token:token];
-//                }
-//                [self updateAppbageNumber];
-//                LLog(@"返回的数据-----------",[NSString stringWithFormat:@"errcode:%ld--------token:%@",(long)[responseObject[@"errcode"] integerValue],responseObject[@"token"]]);
-//
-//            } else {
-//                [SVProgressHUD dismiss];
-//                [self showLoginFailWithNetWork];
-//            }
-//        } else {
-//            [SVProgressHUD dismiss];
-//            [self showLoginFailWithNetWork];
-//        }
-//    }];
-}
-
-//获取相册id
-- (void)requestUid{
-//    [[WGConnectHelper shareInstance]postUrl:WGGetUidAPI params:nil entiyClass:nil parserJsonBlock:nil complateBlock:^(NSURLSessionDataTask * _Nullable task, WGConnectData * _Nonnull connectData) {
-//        if (connectData.isSuccess) {
-//            [[UserData shareInstance]setParam:WGUIDKEY ValueOfParam:connectData.responseData[@"userId"]];
-//        }
-//    }];
-}
 
 #pragma mark - 配置环境
 
-- (void)getUserDataFailed{
+- (void)getUserDataFailed {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"获取微信数据失败，请检查网络权限是否打开" message:nil preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *actionLeft = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
     }];
@@ -343,8 +261,7 @@
     }];
     [alert addAction:actionLeft];
     [alert addAction:actionRight];
-    [self presentViewController:alert animated:YES completion:^{
-    }];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 
@@ -375,7 +292,7 @@
     [self.navigationController pushViewController:ctr animated:YES];
 }
 
-- (void)loginFailWithNetWork{
+- (void)loginFailWithNetWork {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"网络问题,登录未成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *actionLeft = [UIAlertAction actionWithTitle:[self.appService localizedStringForKey:@"查看解决方案"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSString *url = @"http://mp.weixin.qq.com/s/kNu7VaUszjzIhF0rY_ZhgA";
@@ -385,8 +302,7 @@
     }];
     [alert addAction:actionLeft];
     [alert addAction:actionRight];
-    [self presentViewController:alert animated:YES completion:^{
-    }];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 
@@ -403,18 +319,14 @@
     }];
     [alert addAction:actionRight];
     [alert addAction:actionLeft];
-    [self presentViewController:alert animated:YES completion:^{
-    }];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)jumpConactCustomerCtr {
-//    WebViewController *webVC=[[WebViewController alloc] init];
-     NSArray * scripts = @[@"const wg_titleBar = document.getElementsByClassName('title-normal')[0];wg_titleBar.style.display='none'"];
-//    [webVC setUrlString:kconact_customer_link andTitle:nil andIsIndex:0];
-//    [self.navigationController pushViewController:webVC animated:YES];
+    NSArray * scripts = @[@"const wg_titleBar = document.getElementsByClassName('title-normal')[0];wg_titleBar.style.display='none'"];
     UIViewController *ctr = [Bifrost handleURL:kRouteWebPath
                                  complexParams:@{
-                                     kRouteWebUrlParams:@"",
+                                     kRouteWebUrlParams: [self.appService conact_customer_link],
                                     kRouteWebScriptsParams:scripts
                                  } completion:nil];
     [self.navigationController pushViewController:ctr animated:YES];
@@ -427,7 +339,7 @@
 
 }
 
-- (void)protocolBtnClick{
+- (void)protocolBtnClick {
     NSString *mobileLoginURL = @"https://mp.weixin.qq.com/s/9W-YveWqvEwpr8MUDOTV0g";
     UIViewController *ctr = [Bifrost handleURL:kRouteWebPath complexParams:@{kRouteWebUrlParams:  mobileLoginURL} completion:nil];
     [self.navigationController pushViewController:ctr animated:YES];
@@ -437,11 +349,11 @@
 
 #pragma mark - 懒加载
 
-- (UIImageView *)imageView{
+- (UIImageView *)imageView {
     if (!_imageView) {
         _imageView = [[UIImageView alloc]init];
         _imageView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-        if (UIDevice.currentDevice.isIPhoneNotchScreen) {
+        if (UIDevice.currentDevice.iSiPhoneNotchScreen) {
             [_imageView setImage:[UserBundleLoad imageNamed:@"iPhone_log_bg"]];
         } else {
             [_imageView setImage:[UserBundleLoad imageNamed:@"group-2"]];
@@ -450,7 +362,7 @@
     return _imageView;
 }
 
-- (UIButton *)loginButton{
+- (UIButton *)loginButton {
     if (!_loginButton) {
         _loginButton = [[UIButton alloc]init];
         [_loginButton addTarget:self action:@selector(userLogin) forControlEvents:UIControlEventTouchUpInside];
@@ -467,7 +379,7 @@
     return _loginButton;
 }
 
-- (UIButton *)mobileButton{
+- (UIButton *)mobileButton {
     if (!_mobileButton) {
         _mobileButton = [[UIButton alloc]init];
         [_mobileButton addTarget:self action:@selector(mobileLogin) forControlEvents:UIControlEventTouchUpInside];
@@ -481,7 +393,7 @@
     return _mobileButton;
 }
 
-- (UILabel *)protocolLabel{
+- (UILabel *)protocolLabel {
     if (!_protocolLabel) {
         _protocolLabel = [[UILabel alloc]init];
         _protocolLabel.text = @"登录即代表你同意";
@@ -492,7 +404,7 @@
     return _protocolLabel;
 }
 
-- (UIButton *)protocolBtn{
+- (UIButton *)protocolBtn {
     if (!_protocolBtn) {
         _protocolBtn = [[UIButton alloc]init];
         [_protocolBtn addTarget:self action:@selector(protocolBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -503,40 +415,6 @@
         _protocolBtn.titleEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 5);
     }
     return _protocolBtn;
-}
-
-- (void)viewDidLayoutSubviews{
-    [super viewDidLayoutSubviews];
-
-    self.imageView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-    if (UIDevice.currentDevice.isPad) {
-        [self.imageView setImage:[UserBundleLoad imageNamed:@"index"]];
-    }else{
-        if (UIDevice.currentDevice.isIPhoneNotchScreen) {
-            [self.imageView setImage:[UserBundleLoad imageNamed:@"iPhone_log_bg"]];
-        } else {
-            [self.imageView setImage:[UserBundleLoad imageNamed:@"group-2"]];
-        }
-    }
-    if (UIDevice.currentDevice.isIPhoneNotchScreen) {
-        self.mobileButton.frame = CGRectMake(20, UIScreen.height-62-34, UIScreen.width-40, 20);
-        self.loginButton.frame = CGRectMake(20, UIScreen.height-120-34, UIScreen.width-40, 44);
-        self.protocolLabel.frame = CGRectMake(UIScreen.width/2-100, UIScreen.height-42-34, 100, 44);
-        self.protocolBtn.frame = CGRectMake(UIScreen.width/2, UIScreen.height-42-34, 120, 44);
-    }else{
-        self.mobileButton.frame = CGRectMake(20, UIScreen.height-62, UIScreen.width-40, 20);
-        self.loginButton.frame = CGRectMake(20, UIScreen.height-120, UIScreen.width-40, 44);
-        self.protocolLabel.frame = CGRectMake(UIScreen.width/2-100, UIScreen.height-42, 100, 44);
-        self.protocolBtn.frame = CGRectMake(UIScreen.width/2, UIScreen.height-42, 120, 44);
-    }
-}
-
-- (void)dealloc {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
 }
 
 @end

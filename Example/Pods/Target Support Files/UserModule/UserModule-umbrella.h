@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "UserModule.h"
 #import "ViewController.h"
 
 FOUNDATION_EXPORT double UserModuleVersionNumber;
