@@ -131,6 +131,7 @@ extension NetLayer {
             data.uid = result[ResponseKeyType.uid.rawValue] as? String
             data.redirect_url = result[ResponseKeyType.redirect_url.rawValue] as? String
             data.result = result[ResponseKeyType.result.rawValue]
+            data.token = result[ResponseKeyType.token.rawValue] as? String
             if let code = data.errcode {
                 if code != "0" {
                     data.errType = .kConnect_Serve_Error_Type
@@ -174,6 +175,7 @@ enum ResponseKeyType: String {
     case result = "result"
     case uid = "uid"
     case redirect_url = "redirect_url"
+    case token = "token"
 }
 
 
@@ -189,6 +191,7 @@ enum ResponseKeyType: String {
     @objc public var uid: String?
     @objc public var redirect_url: String?
     @objc public var result: Any?
+    @objc public var token: String?
     
     override init() {
         super.init()

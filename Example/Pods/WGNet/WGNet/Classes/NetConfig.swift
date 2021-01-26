@@ -11,11 +11,13 @@ public class NetConfig: NSObject {
     public typealias HeadersClosure = (String) -> [String: String]?
     public typealias CallbackClosure = (_ data: WGConnectData) -> Void
     public typealias BaseUrlClosure = (String) -> String
+    public typealias VipClosure  = (_ vip: [String: Any]) -> Void
     
     public private(set) var defaultHeades: [String: String]?
     public private(set) var defaultParams: [String: Any]?
 
     public private(set) var urlClosure: BaseUrlClosure?
+    public private(set) var vipClosure: VipClosure?
     
     @objc public static let config: NetConfig = NetConfig.init()
     
@@ -37,6 +39,10 @@ extension NetConfig {
     
     @objc public func configBaseUrlClosure(_ urlClosure: @escaping BaseUrlClosure) {
         self.urlClosure = urlClosure
+    }
+    
+    @objc public func configVipClosure(_ vipClosure: @escaping VipClosure) {
+        self.vipClosure = vipClosure
     }
     
 }

@@ -7,26 +7,26 @@
 
 import Foundation
 
-public class PreferenceTool: NSObject {
+ public class PreferenceTool: NSObject {
     
-    static public func set(value: Any?, with key: String) {
+    @objc static public func set(value: Any?, with key: String) {
         UserDefaults.standard.setValue(value, forKey: key)
         UserDefaults.standard.synchronize()
     }
     
-    static public func getValue(by key: String) -> Any? {
+    @objc static public func getValue(by key: String) -> Any? {
         UserDefaults.standard.value(forKey: key)
     }
     
-    static public func setValueInDefaultGroup(_ value: Any, key: String) {
+    @objc static public func setValueInDefaultGroup(_ value: Any?, key: String) {
         setValueInGroup(value, key: key)
     }
     
-    static public func getValueInDefaultGroup(with key: String) -> Any? {
+    @objc static public func getValueInDefaultGroup(with key: String) -> Any? {
         return getValueInGroupWithKey(key)
     }
     
-    static public func setValueInGroup(_ value: Any, key: String, suiteName: String = "group.com.sd.StoreSystem.12.ShareExtension") -> Void {
+    static public func setValueInGroup(_ value: Any?, key: String, suiteName: String = "group.com.sd.StoreSystem.12.ShareExtension") -> Void {
         guard let userDefaults = UserDefaults.init(suiteName: suiteName) else {
             return
         }

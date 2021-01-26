@@ -48,7 +48,7 @@ import UIKit
     
     /// 是否刘海屏
     /// - Returns: result
-    func isIPhoneNotchScreen() -> Bool {
+    func iSiPhoneNotchScreen() -> Bool {
         var result = false
         if !self.isPhone {
             return result
