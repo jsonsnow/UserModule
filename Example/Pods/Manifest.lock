@@ -30,7 +30,8 @@ PODS:
     - WGNet
   - WGCommon (0.1.2):
     - Masonry (~> 1.0.1)
-  - WGNet (0.1.3):
+  - WGNet (0.1.5):
+    - Mediator
     - Moya (~> 13.0.1)
   - WGRouter (0.1.0)
 
@@ -75,7 +76,7 @@ SPEC CHECKSUMS:
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   UserModule: 5c4238bc34b98cf1bebf830d05d35d973239648c
   WGCommon: 16d3ca44dc2b4129102aa8e75d802dd7ac431240
-  WGNet: 4bda697eb51cdbc866e126710a32436b6adf10b1
+  WGNet: 2934080991eabaa099b96fe4044c6d963cf8e32c
   WGRouter: 12df174f180cff141c947c00cfd563c069fec2a0
 
 PODFILE CHECKSUM: 51a7bd3b4358c3526458b8532e50b08f144b0c79
